@@ -35,7 +35,7 @@ const TeacherDashboard = () => {
       const today = new Date().toISOString().split("T")[0];
 
       const res = await fetch(
-        "https://attendance-backend-9a7c.onrender.com/mark-attendance",
+        `${process.env.REACT_APP_BACKEND_URL}/mark-attendance`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -61,7 +61,7 @@ const TeacherDashboard = () => {
     try {
       const uid = auth.currentUser.uid;
       const res = await fetch(
-        `https://attendance-backend-9a7c.onrender.com/teacher-attendance/${uid}`
+        `${process.env.REACT_APP_BACKEND_URL}/teacher-attendance/${uid}`
       );
       const data = await res.json();
       // ✅ Ensure data is an array

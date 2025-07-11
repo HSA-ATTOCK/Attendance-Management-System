@@ -96,7 +96,7 @@ const AdminDashboard = () => {
   const create = async () => {
     try {
       const res = await fetch(
-        "https://attendance-backend-9a7c.onrender.com/create-teacher",
+        `${process.env.REACT_APP_BACKEND_URL}/create-teacher`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -120,7 +120,7 @@ const AdminDashboard = () => {
   const fetchAllAttendance = async () => {
     try {
       const res = await fetch(
-        "https://attendance-backend-9a7c.onrender.com/all-attendance"
+        `${process.env.REACT_APP_BACKEND_URL}/all-attendance`
       );
       const data = await res.json();
       setRecords(data);
