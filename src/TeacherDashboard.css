@@ -1,0 +1,126 @@
+/* TeacherDashboard.css */
+
+.teacher-container {
+  max-width: 480px;
+  margin: 40px auto;
+  padding: 30px 25px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+  font-family: "Segoe UI", sans-serif;
+  text-align: center;
+}
+
+.teacher-container h2 {
+  margin-bottom: 20px;
+  color: #2c3e50;
+}
+
+.ip {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 15px;
+}
+
+.mark-btn {
+  background-color: #28a745;
+  color: white;
+  font-size: 16px;
+  border: none;
+  padding: 10px 24px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-bottom: 20px;
+}
+
+.mark-btn:hover {
+  background-color: #218838;
+}
+
+.mark-btn:disabled {
+  background-color: #6c757d;
+  cursor: not-allowed;
+}
+
+.message {
+  margin-top: 12px;
+  font-size: 14px;
+  color: #28a745;
+  font-weight: 500;
+}
+
+.error-msg {
+  color: #dc3545;
+  font-weight: 500;
+  font-size: 14px;
+  margin-top: 10px;
+}
+
+button.logout-btn {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 10px 24px;
+  font-size: 15px;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-top: 20px;
+}
+
+button.logout-btn:hover {
+  background-color: #bb2d3b;
+}
+
+/* Attendance History Table */
+.attendance-list {
+  margin-top: 20px;
+  text-align: left;
+}
+
+.attendance-list div {
+  background-color: #f8f9fa;
+  border-radius: 6px;
+  padding: 10px 12px;
+  margin-bottom: 8px;
+  border-left: 4px solid #28a745;
+  font-size: 14px;
+  color: #333;
+}
+
+/* Table-based structure for larger history (optional) */
+table.attendance-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+}
+
+.attendance-table th,
+.attendance-table td {
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  text-align: left;
+  font-size: 14px;
+}
+
+.attendance-table th {
+  background-color: #f0f0f0;
+}
+
+.attendance-table tr:nth-child(even) {
+  background-color: #fafafa;
+}
+
+/* Responsive */
+@media (max-width: 500px) {
+  .teacher-container {
+    padding: 20px;
+  }
+
+  .mark-btn,
+  .logout-btn {
+    width: 100%;
+    font-size: 15px;
+    padding: 10px;
+  }
+}
