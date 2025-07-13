@@ -39,13 +39,16 @@
   padding: 1.5rem;
   border-radius: 12px;
   margin-bottom: 2rem;
+  width: 100%; /* Ensure it doesn't overflow */
+  box-sizing: border-box; /* Include padding in width calculation */
 }
 
 .form-row {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1rem;
+  grid-template-columns: repeat(3, 1fr); /* Equal 3 columns */
+  gap: 1rem; /* Space between inputs */
   margin-bottom: 1rem;
+  width: 100%; /* Full width */
 }
 
 .dashboard-container input {
@@ -56,6 +59,7 @@
   font-size: 0.9375rem;
   transition: all 0.2s ease;
   background-color: #ffffff;
+  box-sizing: border-box; /* Include padding in width */
 }
 
 .dashboard-container input:focus {
