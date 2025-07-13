@@ -134,6 +134,34 @@
   margin-left: auto;
 }
 
+.search-group {
+  display: flex;
+  gap: 0.5rem;
+}
+
+/* search section*/
+.search-btn {
+  background-color: #4f46e5 !important;
+  white-space: nowrap;
+}
+
+.filter-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+}
+
+.filter-controls input[type="date"] {
+  flex: 1;
+  min-width: 150px;
+}
+
+/* Make search input take available space */
+.search-group input {
+  flex: 1;
+}
+
 /* Table Styles */
 .attendance-table {
   width: 100%;
@@ -251,11 +279,15 @@
   }
 
   .filter-controls {
-    margin-left: 0;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .search-group {
     width: 100%;
   }
 
-  .filter-controls input {
+  .filter-controls input[type="date"] {
     width: 100%;
   }
 }

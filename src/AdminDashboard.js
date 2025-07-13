@@ -130,6 +130,10 @@ const AdminDashboard = () => {
     }
   };
 
+  const handleSearch = () => {
+    console.log("Search executed for:", searchTerm);
+  };
+
   const filtered = records.filter(
     (rec) =>
       rec.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
