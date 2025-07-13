@@ -1,4 +1,3 @@
-// AdminDashboard.js (Fixed with proper search functionality)
 import React, { useEffect, useState } from "react";
 import { auth } from "./firebase";
 import { onAuthStateChanged, signOut } from "firebase/auth";
@@ -11,13 +10,16 @@ const AdminDashboard = () => {
   const [pass, setPass] = useState("");
   const [msg, setMsg] = useState("");
   const [records, setRecords] = useState([]);
-  const [search, setSearch] = useState("");
   const [dateFilter, setDateFilter] = useState("");
-  const [viewAll, setViewAll] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [stats, setStats] = useState([]);
+  const [collegeTime, setCollegeTime] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [autoAbsentLoading, setAutoAbsentLoading] = useState(false);
   const navigate = useNavigate();
 
-  // ✅ ADDED: Same timestamp formatting function from TeacherDashboard
+  // ✅ Same timestamp formatting function
   const formatTimestamp = (timestamp) => {
     try {
       if (!timestamp) return "Not Available";
@@ -26,12 +28,9 @@ const AdminDashboard = () => {
 
       // Handle Firestore timestamp format (BOTH _seconds and seconds)
       if (timestamp._seconds !== undefined || timestamp.seconds !== undefined) {
-        // Handle both client SDK format (_seconds) and server SDK format (seconds)
         const seconds = timestamp._seconds || timestamp.seconds;
         const nanoseconds =
           timestamp._nanoseconds || timestamp.nanoseconds || 0;
-
-        // Convert to milliseconds
         const milliseconds = Math.floor(nanoseconds / 1000000);
         date = new Date(seconds * 1000 + milliseconds);
       }
@@ -75,6 +74,7 @@ const AdminDashboard = () => {
       return date.toLocaleString("en-US", {
         month: "short",
         day: "2-digit",
+        year: "numeric",
         hour: "2-digit",
         minute: "2-digit",
         second: "2-digit",
@@ -86,22 +86,67 @@ const AdminDashboard = () => {
     }
   };
 
+  // ✅ Check college time status
+  const checkCollegeTime = async () => {
+    try {
+      const res = await fetch(
+        `${process.env.REACT_APP_BACKEND_URL}/college-time`
+      );
+      if (res.ok) {
+        const data = await res.json();
+        setCollegeTime(data);
+      }
+    } catch (err) {
+      console.error("Failed to fetch college time:", err);
+    }
+  };
+
+  // ✅ Initial setup on component mount
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, (user) => {
-      if (!user) navigate("/");
-      else fetchAllAttendance();
+      if (!user) {
+        navigate("/");
+      } else {
+        fetchAllAttendance();
+        fetchAttendanceStats();
+        checkCollegeTime();
+      }
     });
     return () => unsub();
   }, [navigate]);
 
+  // ✅ Auto-refresh every 30 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (auth.currentUser) {
+        fetchAllAttendance();
+        fetchAttendanceStats();
+        checkCollegeTime();
+      }
+    }, 30000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  // ✅ Create teacher function
   const create = async () => {
+    if (!name.trim() || !email.trim() || !pass.trim()) {
+      setMsg("❌ Please fill in all fields");
+      return;
+    }
+
+    setLoading(true);
     try {
       const res = await fetch(
         `${process.env.REACT_APP_BACKEND_URL}/create-teacher`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ name, email, password: pass }),
+          body: JSON.stringify({
+            name: name.trim(),
+            email: email.trim(),
+            password: pass,
+          }),
         }
       );
       const data = await res.json();
@@ -110,178 +155,387 @@ const AdminDashboard = () => {
         setName("");
         setEmail("");
         setPass("");
+        setTimeout(() => setMsg(""), 3000);
       } else {
-        setMsg("❌ Failed: " + data.error);
+        setMsg("❌ Failed: " + (data.error || "Unknown error"));
       }
     } catch (error) {
       setMsg("❌ Error: " + error.message);
+    } finally {
+      setLoading(false);
     }
   };
 
+  // ✅ Fetch all attendance records
   const fetchAllAttendance = async () => {
     try {
       const res = await fetch(
         `${process.env.REACT_APP_BACKEND_URL}/all-attendance`
       );
-      const data = await res.json();
-      setRecords(data);
+      if (res.ok) {
+        const data = await res.json();
+        setRecords(Array.isArray(data) ? data : []);
+      } else {
+        console.error("Failed to fetch attendance records");
+      }
     } catch (err) {
-      setMsg("❌ Failed to fetch records");
+      console.error("Failed to fetch records:", err);
+      setRecords([]);
     }
   };
 
-  // ✅ FIXED: Remove unused handleSearch function and use real-time filtering
-  // The search now works automatically as you type!
+  // ✅ Fetch attendance statistics
+  const fetchAttendanceStats = async () => {
+    try {
+      const res = await fetch(
+        `${process.env.REACT_APP_BACKEND_URL}/attendance-stats`
+      );
+      if (res.ok) {
+        const data = await res.json();
+        setStats(Array.isArray(data) ? data : []);
+      }
+    } catch (err) {
+      console.error("Failed to fetch stats:", err);
+      setStats([]);
+    }
+  };
 
-  // ✅ FIXED: Proper filtering logic
+  // ✅ Manual trigger for auto-absent marking
+  const triggerAutoAbsent = async () => {
+    setAutoAbsentLoading(true);
+    try {
+      const res = await fetch(
+        `${process.env.REACT_APP_BACKEND_URL}/admin/mark-absent`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+      const data = await res.json();
+      if (data.success) {
+        setMsg("✅ Auto-absent marking completed");
+        fetchAllAttendance();
+        fetchAttendanceStats();
+        setTimeout(() => setMsg(""), 3000);
+      } else {
+        setMsg("❌ Failed: " + (data.error || "Unknown error"));
+      }
+    } catch (error) {
+      setMsg("❌ Error: " + error.message);
+    } finally {
+      setAutoAbsentLoading(false);
+    }
+  };
+
+  // ✅ Enhanced filtering logic
   const filtered = records.filter((rec) => {
     const nameMatch =
       rec.name?.toLowerCase().includes(searchTerm.toLowerCase()) || false;
     const dateMatch = dateFilter ? rec.date === dateFilter : true;
-    return nameMatch && dateMatch;
+    const statusMatch =
+      statusFilter === "all" ||
+      (statusFilter === "present" && rec.present) ||
+      (statusFilter === "absent" && !rec.present);
+
+    return nameMatch && dateMatch && statusMatch;
   });
 
+  // ✅ Download CSV function
   const downloadCSV = () => {
-    const csvRows = ["Name,Date,Time"];
+    if (filtered.length === 0) {
+      setMsg("❌ No records to download");
+      setTimeout(() => setMsg(""), 3000);
+      return;
+    }
+
+    const csvRows = ["Name,Date,Status,Time,Marked By,Reason"];
     filtered.forEach((r) => {
-      // ✅ FIXED: Use formatTimestamp function instead of direct Date conversion
       const time = formatTimestamp(r.timestamp);
-      csvRows.push(`${r.name},${r.date},${time}`);
+      const status = r.present ? "Present" : "Absent";
+      const markedBy = r.markedBy || "system";
+      const reason = r.reason || "";
+      csvRows.push(
+        `"${r.name}","${r.date}","${status}","${time}","${markedBy}","${reason}"`
+      );
     });
-    const blob = new Blob([csvRows.join("\n")], { type: "text/csv" });
+
+    const blob = new Blob([csvRows.join("\n")], {
+      type: "text/csv;charset=utf-8;",
+    });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = "attendance.csv";
+    a.download = `attendance_${new Date().toISOString().split("T")[0]}.csv`;
+    document.body.appendChild(a);
     a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
   };
 
+  // ✅ Logout function
   const logout = async () => {
-    await signOut(auth);
-    navigate("/");
+    try {
+      await signOut(auth);
+      navigate("/");
+    } catch (error) {
+      console.error("Logout error:", error);
+    }
+  };
+
+  // ✅ Clear filters function
+  const clearFilters = () => {
+    setSearchTerm("");
+    setDateFilter("");
+    setStatusFilter("all");
   };
 
   return (
     <div className="dashboard-container">
-      <h2>👨‍💼 Admin Dashboard</h2>
+      <div className="dashboard-header">
+        <h2>👨‍💼 Admin Dashboard</h2>
+        <button
+          className="refresh-btn"
+          onClick={() => {
+            fetchAllAttendance();
+            fetchAttendanceStats();
+            checkCollegeTime();
+          }}
+        >
+          🔄 Refresh
+        </button>
+      </div>
 
+      {/* ✅ College Time Status */}
+      {collegeTime && (
+        <div
+          className={`college-time-status ${
+            collegeTime.isOpen ? "open" : "closed"
+          }`}
+        >
+          <h4>🕒 College Time Status</h4>
+          <div className="time-info">
+            <div className="status-item">
+              <strong>Status:</strong>
+              <span
+                className={`status-badge ${
+                  collegeTime.isOpen ? "open" : "closed"
+                }`}
+              >
+                {collegeTime.isOpen ? "🟢 Open" : "🔴 Closed"}
+              </span>
+            </div>
+            <div className="status-item">
+              <strong>Hours:</strong> {collegeTime.config?.START_HOUR || "N/A"}
+              :00 - {collegeTime.config?.END_HOUR || "N/A"}:00
+            </div>
+            <div className="status-item">
+              <strong>Current:</strong> {collegeTime.currentTime || "N/A"}
+            </div>
+            {!collegeTime.isWeekday && (
+              <div className="status-item weekend">
+                <strong>Weekend</strong>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* ✅ Create Teacher Form */}
       <div className="create-teacher-form">
+        <h3>➕ Create New Teacher</h3>
         <div className="form-row">
           <input
+            type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder="Teacher Name"
+            disabled={loading}
           />
           <input
+            type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="Teacher Email"
+            disabled={loading}
           />
           <input
             type="password"
             value={pass}
             onChange={(e) => setPass(e.target.value)}
             placeholder="Teacher Password"
+            disabled={loading}
           />
         </div>
-        <button onClick={create}>Create Teacher</button>
-        <p className={`message ${msg.includes("✅") ? "success" : "error"}`}>
-          {msg}
-        </p>
+        <button onClick={create} disabled={loading} className="create-btn">
+          {loading ? "Creating..." : "Create Teacher"}
+        </button>
+        {msg && (
+          <p className={`message ${msg.includes("✅") ? "success" : "error"}`}>
+            {msg}
+          </p>
+        )}
       </div>
 
       <div className="divider"></div>
 
+      {/* ✅ Attendance Statistics */}
+      {stats.length > 0 && (
+        <div className="stats-section">
+          <h3>📊 Attendance Statistics</h3>
+          <div className="stats-grid">
+            {stats.map((stat, index) => (
+              <div key={index} className="stat-card">
+                <h4>{stat.teacher}</h4>
+                <div className="stat-metrics">
+                  <div className="metric">
+                    <strong>Total:</strong> {stat.totalDays}
+                  </div>
+                  <div className="metric present">
+                    <strong>Present:</strong> {stat.presentCount}
+                  </div>
+                  <div className="metric absent">
+                    <strong>Absent:</strong> {stat.absentCount}
+                  </div>
+                  <div className="metric rate">
+                    <strong>Rate:</strong> {stat.attendancePercentage}%
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* ✅ Records Section */}
       <div className="records-section">
         <div className="records-header">
-          <h3>📋 All Attendance Records</h3>
-          <div className="filter-controls">
-            <div className="search-group">
-              <input
-                placeholder="Search teacher..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                // ✅ REMOVED: onKeyPress and search button click - now works automatically
-              />
-              {/* ✅ REMOVED: Search button - filtering happens automatically */}
-            </div>
-            <input
-              type="date"
-              value={dateFilter}
-              onChange={(e) => setDateFilter(e.target.value)}
-            />
-            <button onClick={downloadCSV}>⬇️ Download CSV</button>
+          <h3>📋 All Attendance Records ({filtered.length})</h3>
+          <div className="header-actions">
+            <button onClick={downloadCSV} className="download-btn">
+              ⬇️ Download CSV
+            </button>
+            <button
+              onClick={triggerAutoAbsent}
+              disabled={autoAbsentLoading}
+              className="auto-absent-btn"
+            >
+              {autoAbsentLoading ? "Processing..." : "🤖 Trigger Auto-Absent"}
+            </button>
           </div>
         </div>
 
-        {/* ✅ ADDED: Complete table structure with filtered data */}
-        <table className="attendance-table">
-          <thead>
-            <tr>
-              <th>Teacher Name</th>
-              <th>Date</th>
-              <th>Time</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filtered.length === 0 ? (
+        {/* ✅ Filter Controls */}
+        <div className="filter-controls">
+          <div className="search-group">
+            <input
+              type="text"
+              placeholder="Search teacher..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="search-input"
+            />
+          </div>
+          <input
+            type="date"
+            value={dateFilter}
+            onChange={(e) => setDateFilter(e.target.value)}
+            className="date-input"
+          />
+          <select
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value)}
+            className="status-select"
+          >
+            <option value="all">All Status</option>
+            <option value="present">Present Only</option>
+            <option value="absent">Absent Only</option>
+          </select>
+          <button onClick={clearFilters} className="clear-btn">
+            🗑️ Clear Filters
+          </button>
+        </div>
+
+        {/* ✅ Attendance Table */}
+        <div className="table-container">
+          <table className="attendance-table">
+            <thead>
               <tr>
-                <td
-                  colSpan="4"
-                  style={{ textAlign: "center", padding: "2rem" }}
-                >
-                  {searchTerm || dateFilter
-                    ? "No records found matching your search"
-                    : "No attendance records found"}
-                </td>
+                <th>Teacher Name</th>
+                <th>Date</th>
+                <th>Status</th>
+                <th>Time</th>
+                <th>Marked By</th>
+                <th>Reason</th>
               </tr>
-            ) : (
-              filtered.map((record, index) => (
-                <tr key={index}>
-                  <td>{record.name}</td>
-                  <td>{record.date}</td>
-                  <td>{formatTimestamp(record.timestamp)}</td>
-                  <td>
-                    <span
-                      style={{
-                        color: record.present ? "#10b981" : "#ef4444",
-                        fontWeight: "600",
-                      }}
-                    >
-                      {record.present ? "✅ Present" : "❌ Absent"}
-                    </span>
+            </thead>
+            <tbody>
+              {filtered.length === 0 ? (
+                <tr>
+                  <td colSpan="6" className="no-records">
+                    {searchTerm || dateFilter || statusFilter !== "all"
+                      ? "No records found matching your filters"
+                      : "No attendance records found"}
                   </td>
                 </tr>
-              ))
-            )}
-          </tbody>
-        </table>
+              ) : (
+                filtered.map((record, index) => (
+                  <tr key={`${record.name}-${record.date}-${index}`}>
+                    <td className="teacher-name">{record.name}</td>
+                    <td className="date">{record.date}</td>
+                    <td className="status">
+                      <span
+                        className={`status-badge ${
+                          record.present ? "present" : "absent"
+                        }`}
+                      >
+                        {record.present ? "✅ Present" : "❌ Absent"}
+                      </span>
+                    </td>
+                    <td className="time">
+                      {formatTimestamp(record.timestamp)}
+                    </td>
+                    <td className="marked-by">
+                      <span
+                        className={`marked-by-badge ${
+                          record.markedBy === "teacher" ? "teacher" : "system"
+                        }`}
+                      >
+                        {record.markedBy === "teacher" ? "Teacher" : "System"}
+                      </span>
+                    </td>
+                    <td className="reason">
+                      <span className="reason-text" title={record.reason}>
+                        {record.reason || "-"}
+                      </span>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
 
-        {/* ✅ ADDED: Search results counter */}
-        <div
-          style={{
-            marginTop: "1rem",
-            textAlign: "center",
-            color: "#6b7280",
-            fontSize: "0.875rem",
-          }}
-        >
-          {filtered.length > 0 && (
-            <span>
+        {/* ✅ Table Footer */}
+        {filtered.length > 0 && (
+          <div className="table-footer">
+            <div className="record-count">
               Showing {filtered.length} of {records.length} records
               {searchTerm && ` for "${searchTerm}"`}
               {dateFilter && ` on ${dateFilter}`}
-            </span>
-          )}
-        </div>
+              {statusFilter !== "all" && ` (${statusFilter})`}
+            </div>
+          </div>
+        )}
       </div>
 
       <div className="divider"></div>
 
-      <button className="logout-btn" onClick={logout}>
-        🚪 Logout
-      </button>
+      {/* ✅ Logout Button */}
+      <div className="logout-section">
+        <button className="logout-btn" onClick={logout}>
+          🚪 Logout
+        </button>
+      </div>
     </div>
   );
 };
