@@ -1,4 +1,4 @@
-// AdminDashboard.js (Fixed with proper timestamp formatting)
+// AdminDashboard.js (Fixed with proper search functionality)
 import React, { useEffect, useState } from "react";
 import { auth } from "./firebase";
 import { onAuthStateChanged, signOut } from "firebase/auth";
@@ -130,15 +130,16 @@ const AdminDashboard = () => {
     }
   };
 
-  const handleSearch = () => {
-    console.log("Search executed for:", searchTerm);
-  };
+  // ✅ FIXED: Remove unused handleSearch function and use real-time filtering
+  // The search now works automatically as you type!
 
-  const filtered = records.filter(
-    (rec) =>
-      rec.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
-      (dateFilter ? rec.date === dateFilter : true)
-  );
+  // ✅ FIXED: Proper filtering logic
+  const filtered = records.filter((rec) => {
+    const nameMatch =
+      rec.name?.toLowerCase().includes(searchTerm.toLowerCase()) || false;
+    const dateMatch = dateFilter ? rec.date === dateFilter : true;
+    return nameMatch && dateMatch;
+  });
 
   const downloadCSV = () => {
     const csvRows = ["Name,Date,Time"];
@@ -200,11 +201,9 @@ const AdminDashboard = () => {
                 placeholder="Search teacher..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                onKeyPress={(e) => e.key === "Enter" && handleSearch()}
+                // ✅ REMOVED: onKeyPress and search button click - now works automatically
               />
-              <button className="search-btn" onClick={handleSearch}>
-                🔍 Search
-              </button>
+              {/* ✅ REMOVED: Search button - filtering happens automatically */}
             </div>
             <input
               type="date"
@@ -215,9 +214,67 @@ const AdminDashboard = () => {
           </div>
         </div>
 
+        {/* ✅ ADDED: Complete table structure with filtered data */}
         <table className="attendance-table">
-          {/* ... table content ... */}
+          <thead>
+            <tr>
+              <th>Teacher Name</th>
+              <th>Date</th>
+              <th>Time</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {filtered.length === 0 ? (
+              <tr>
+                <td
+                  colSpan="4"
+                  style={{ textAlign: "center", padding: "2rem" }}
+                >
+                  {searchTerm || dateFilter
+                    ? "No records found matching your search"
+                    : "No attendance records found"}
+                </td>
+              </tr>
+            ) : (
+              filtered.map((record, index) => (
+                <tr key={index}>
+                  <td>{record.name}</td>
+                  <td>{record.date}</td>
+                  <td>{formatTimestamp(record.timestamp)}</td>
+                  <td>
+                    <span
+                      style={{
+                        color: record.present ? "#10b981" : "#ef4444",
+                        fontWeight: "600",
+                      }}
+                    >
+                      {record.present ? "✅ Present" : "❌ Absent"}
+                    </span>
+                  </td>
+                </tr>
+              ))
+            )}
+          </tbody>
         </table>
+
+        {/* ✅ ADDED: Search results counter */}
+        <div
+          style={{
+            marginTop: "1rem",
+            textAlign: "center",
+            color: "#6b7280",
+            fontSize: "0.875rem",
+          }}
+        >
+          {filtered.length > 0 && (
+            <span>
+              Showing {filtered.length} of {records.length} records
+              {searchTerm && ` for "${searchTerm}"`}
+              {dateFilter && ` on ${dateFilter}`}
+            </span>
+          )}
+        </div>
       </div>
 
       <div className="divider"></div>
