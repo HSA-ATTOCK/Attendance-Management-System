@@ -1,310 +1,205 @@
-/* AdminDashboard.css */
-.dashboard-container {
-  max-width: 900px;
-  margin: 2rem auto;
-  padding: 2.5rem;
-  background-color: #ffffff;
-  border-radius: 16px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
-  font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
-  animation: fadeIn 0.4s ease-out;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.dashboard-container h2 {
-  text-align: center;
-  margin-bottom: 1.5rem;
-  color: #2d3748;
-  font-size: 1.75rem;
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-}
-
-/* Form Section */
-.create-teacher-form {
+/* Updated CSS for Statistics Section */
+.stats-section {
+  margin: 2rem 0;
   background-color: #f8fafc;
-  padding: 1.5rem;
   border-radius: 12px;
-  margin-bottom: 2rem;
-  width: 100%; /* Ensure it doesn't overflow */
-  box-sizing: border-box; /* Include padding in width calculation */
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
-.form-row {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr); /* Equal 3 columns */
-  gap: 1rem; /* Space between inputs */
-  margin-bottom: 1rem;
-  width: 100%; /* Full width */
+.stats-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
 }
 
-.dashboard-container input {
+.stats-dropdown {
+  position: relative;
+  min-width: 200px;
+}
+
+.stats-select {
   width: 100%;
   padding: 0.75rem 1rem;
+  padding-right: 2rem;
   border: 1px solid #e2e8f0;
   border-radius: 8px;
   font-size: 0.9375rem;
+  appearance: none;
+  background-color: white;
+  cursor: pointer;
   transition: all 0.2s ease;
-  background-color: #ffffff;
-  box-sizing: border-box; /* Include padding in width */
 }
 
-.dashboard-container input:focus {
+.stats-select:focus {
   outline: none;
   border-color: #6366f1;
   box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
 }
 
-.dashboard-container button {
-  padding: 0.75rem 1.5rem;
-  background-color: #6366f1;
-  color: #fff;
-  border: none;
-  font-size: 0.9375rem;
-  font-weight: 600;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
+.dropdown-arrow {
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: #64748b;
 }
 
-.dashboard-container button:hover {
-  background-color: #4f46e5;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 6px -1px rgba(99, 102, 241, 0.2);
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
 }
 
-.message {
-  margin: 1rem 0;
-  font-size: 0.9375rem;
-  font-weight: 500;
-  text-align: center;
-  min-height: 1.5rem;
+.stat-card {
+  background-color: white;
+  border-radius: 10px;
+  padding: 1.25rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s ease;
 }
 
-.message.success {
-  color: #10b981;
+.stat-card:hover {
+  transform: translateY(-3px);
 }
 
-.message.error {
-  color: #ef4444;
-}
-
-/* Records Section */
-.records-section {
-  margin-top: 2rem;
-}
-
-.records-header {
+.stat-header {
   display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
+  justify-content: space-between;
   align-items: center;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
 }
 
-.records-header h3 {
+.stat-header h4 {
   margin: 0;
-  color: #2d3748;
-  font-size: 1.25rem;
+  font-size: 1.1rem;
+  color: #1e293b;
+}
+
+.stat-status {
+  font-size: 0.85rem;
+}
+
+.status-badge {
+  padding: 0.25rem 0.5rem;
+  border-radius: 20px;
+  font-weight: 500;
+}
+
+.status-badge.good {
+  background-color: #dcfce7;
+  color: #166534;
+}
+
+.status-badge.warning {
+  background-color: #fef9c3;
+  color: #854d0e;
+}
+
+.stat-metrics {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.metric {
   display: flex;
-  align-items: center;
-  gap: 0.5rem;
+  flex-direction: column;
 }
 
-.filter-controls {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  margin-left: auto;
+.metric-label {
+  font-size: 0.8rem;
+  color: #64748b;
+  margin-bottom: 0.25rem;
 }
 
-.search-group {
-  display: flex;
-  gap: 0.5rem;
-}
-
-/* search section*/
-.search-btn {
-  background-color: #4f46e5 !important;
-  white-space: nowrap;
-}
-
-.filter-controls {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  align-items: center;
-}
-
-.filter-controls input[type="date"] {
-  flex: 1;
-  min-width: 150px;
-}
-
-/* Make search input take available space */
-.search-group input {
-  flex: 1;
-}
-
-/* Table Styles */
-.attendance-table {
-  width: 100%;
-  border-collapse: separate;
-  border-spacing: 0;
-  margin-top: 1.5rem;
-  background-color: #ffffff;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-}
-
-.attendance-table th {
-  background-color: #f1f5f9;
-  color: #334155;
+.metric-value {
   font-weight: 600;
-  font-size: 0.875rem;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  padding: 0.75rem 1rem;
-  text-align: left;
+  color: #1e293b;
 }
 
-.attendance-table td {
-  padding: 0.875rem 1rem;
-  border-bottom: 1px solid #e2e8f0;
-  font-size: 0.9375rem;
-  color: #475569;
+.metric.present .metric-value {
+  color: #166534;
 }
 
-.attendance-table tr:last-child td {
-  border-bottom: none;
+.metric.absent .metric-value {
+  color: #b91c1c;
 }
 
-.attendance-table tr:hover td {
-  background-color: #f8fafc;
+.metric.rate .metric-value {
+  color: #1d4ed8;
 }
 
-/* Divider */
-.divider {
-  border: none;
-  height: 1px;
+.stat-chart {
+  height: 6px;
   background-color: #e2e8f0;
-  margin: 2rem 0;
+  border-radius: 3px;
+  margin-top: 0.5rem;
+  overflow: hidden;
 }
 
-/* Logout Button */
-.logout-btn {
-  background-color: #ef4444 !important;
-  margin-top: 2rem;
+.attendance-bar {
+  height: 100%;
+  background-color: #4f46e5;
+  border-radius: 3px;
+  transition: width 0.5s ease;
 }
 
-.logout-btn:hover {
-  background-color: #dc2626 !important;
-  box-shadow: 0 4px 6px -1px rgba(239, 68, 68, 0.2) !important;
-}
-
-/* Dark Mode Support */
+/* Dark mode adjustments */
 @media (prefers-color-scheme: dark) {
-  .dashboard-container {
-    background-color: #1e293b;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-  }
-
-  .dashboard-container h2,
-  .records-header h3 {
-    color: #f8fafc;
-  }
-
-  .create-teacher-form {
+  .stats-section {
     background-color: #334155;
   }
 
-  .dashboard-container input {
+  .stat-card {
+    background-color: #1e293b;
+    border: 1px solid #475569;
+  }
+
+  .stat-header h4 {
+    color: #f8fafc;
+  }
+
+  .metric-value {
+    color: #e2e8f0 !important;
+  }
+
+  .metric-label {
+    color: #94a3b8;
+  }
+
+  .stats-select {
     background-color: #334155;
     border-color: #475569;
     color: #f8fafc;
   }
 
-  .dashboard-container input:focus {
-    background-color: #1e293b;
-  }
-
-  .attendance-table {
-    background-color: #1e293b;
-  }
-
-  .attendance-table th {
-    background-color: #334155;
-    color: #e2e8f0;
-  }
-
-  .attendance-table td {
+  .dropdown-arrow {
     color: #94a3b8;
-    border-bottom-color: #334155;
   }
 
-  .attendance-table tr:hover td {
-    background-color: #334155;
-  }
-
-  .divider {
-    background-color: #334155;
+  .stat-chart {
+    background-color: #475569;
   }
 }
 
-/* Responsive Adjustments */
+/* Responsive adjustments */
 @media (max-width: 768px) {
-  .dashboard-container {
-    padding: 1.5rem;
-  }
-
-  .form-row {
+  .stats-grid {
     grid-template-columns: 1fr;
   }
 
-  .filter-controls {
+  .stats-header {
     flex-direction: column;
-    align-items: stretch;
+    align-items: flex-start;
   }
 
-  .search-group {
+  .stats-dropdown {
     width: 100%;
-  }
-
-  .filter-controls input[type="date"] {
-    width: 100%;
-  }
-}
-
-@media (max-width: 480px) {
-  .dashboard-container {
-    padding: 1.25rem;
-    margin: 1rem;
-  }
-
-  .attendance-table {
-    display: block;
-    overflow-x: auto;
-  }
-
-  .dashboard-container button {
-    width: 100%;
-    justify-content: center;
   }
 }

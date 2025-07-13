@@ -17,6 +17,7 @@ const AdminDashboard = () => {
   const [collegeTime, setCollegeTime] = useState(null);
   const [loading, setLoading] = useState(false);
   const [autoAbsentLoading, setAutoAbsentLoading] = useState(false);
+  const [selectedTeacher, setSelectedTeacher] = useState("all");
   const navigate = useNavigate();
 
   // ✅ Same timestamp formatting function
@@ -380,25 +381,72 @@ const AdminDashboard = () => {
 
       {/* ✅ Attendance Statistics */}
       {stats.length > 0 && (
+        // Updated Attendance Statistics Section in AdminDashboard.js
         <div className="stats-section">
-          <h3>📊 Attendance Statistics</h3>
+          <div className="stats-header">
+            <h3>📊 Attendance Statistics</h3>
+            <div className="stats-dropdown">
+              <select
+                value={selectedTeacher}
+                onChange={(e) => setSelectedTeacher(e.target.value)}
+                className="stats-select"
+              >
+                <option value="all">All Teachers</option>
+                {stats.map((stat, index) => (
+                  <option key={index} value={stat.teacher}>
+                    {stat.teacher}
+                  </option>
+                ))}
+              </select>
+              <span className="dropdown-arrow">▼</span>
+            </div>
+          </div>
+
           <div className="stats-grid">
-            {stats.map((stat, index) => (
+            {(selectedTeacher === "all"
+              ? stats
+              : stats.filter((stat) => stat.teacher === selectedTeacher)
+            ).map((stat, index) => (
               <div key={index} className="stat-card">
-                <h4>{stat.teacher}</h4>
+                <div className="stat-header">
+                  <h4>{stat.teacher}</h4>
+                  <div className="stat-status">
+                    <span
+                      className={`status-badge ${
+                        stat.attendancePercentage >= 75 ? "good" : "warning"
+                      }`}
+                    >
+                      {stat.attendancePercentage >= 75
+                        ? "👍 Good"
+                        : "⚠️ Needs Improvement"}
+                    </span>
+                  </div>
+                </div>
                 <div className="stat-metrics">
                   <div className="metric">
-                    <strong>Total:</strong> {stat.totalDays}
+                    <span className="metric-label">Total Days:</span>
+                    <span className="metric-value">{stat.totalDays}</span>
                   </div>
                   <div className="metric present">
-                    <strong>Present:</strong> {stat.presentCount}
+                    <span className="metric-label">Present:</span>
+                    <span className="metric-value">{stat.presentCount}</span>
                   </div>
                   <div className="metric absent">
-                    <strong>Absent:</strong> {stat.absentCount}
+                    <span className="metric-label">Absent:</span>
+                    <span className="metric-value">{stat.absentCount}</span>
                   </div>
                   <div className="metric rate">
-                    <strong>Rate:</strong> {stat.attendancePercentage}%
+                    <span className="metric-label">Attendance Rate:</span>
+                    <span className="metric-value">
+                      {stat.attendancePercentage}%
+                    </span>
                   </div>
+                </div>
+                <div className="stat-chart">
+                  <div
+                    className="attendance-bar"
+                    style={{ width: `${stat.attendancePercentage}%` }}
+                  ></div>
                 </div>
               </div>
             ))}
