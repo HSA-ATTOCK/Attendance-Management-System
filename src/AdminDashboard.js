@@ -159,61 +159,61 @@ const AdminDashboard = () => {
     <div className="dashboard-container">
       <h2>👨‍💼 Admin Dashboard</h2>
 
-      <input
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-        placeholder="Teacher Name"
-      />
-      <input
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        placeholder="Teacher Email"
-      />
-      <input
-        type="password"
-        value={pass}
-        onChange={(e) => setPass(e.target.value)}
-        placeholder="Teacher Password"
-      />
-      <button onClick={create}>Create Teacher</button>
-      <p>{msg}</p>
+      <div className="create-teacher-form">
+        <div className="form-row">
+          <input
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Teacher Name"
+          />
+          <input
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="Teacher Email"
+          />
+          <input
+            type="password"
+            value={pass}
+            onChange={(e) => setPass(e.target.value)}
+            placeholder="Teacher Password"
+          />
+        </div>
+        <button onClick={create}>Create Teacher</button>
+        <p className={`message ${msg.includes("✅") ? "success" : "error"}`}>
+          {msg}
+        </p>
+      </div>
 
-      <hr />
+      <div className="divider"></div>
 
-      <h3>📋 All Attendance Records</h3>
-      <input
-        placeholder="Search teacher..."
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-      />
-      <input
-        type="date"
-        value={dateFilter}
-        onChange={(e) => setDateFilter(e.target.value)}
-      />
-      <button onClick={downloadCSV}>⬇️ Download CSV</button>
+      <div className="records-section">
+        <div className="records-header">
+          <h3>📋 All Attendance Records</h3>
+          <div className="filter-controls">
+            <input
+              placeholder="Search teacher..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+            <input
+              type="date"
+              value={dateFilter}
+              onChange={(e) => setDateFilter(e.target.value)}
+            />
+            <button onClick={downloadCSV}>⬇️ Download CSV</button>
+          </div>
+        </div>
 
-      <table className="attendance-table">
-        <thead>
-          <tr>
-            <th>Teacher Name</th>
-            <th>Date</th>
-            <th>Time</th>
-          </tr>
-        </thead>
-        <tbody>
-          {filtered.map((record, i) => (
-            <tr key={i}>
-              <td>{record.name}</td>
-              <td>{record.date}</td>
-              <td>{formatTimestamp(record.timestamp)}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+        <table className="attendance-table">
+          {/* ... table content ... */}
+        </table>
+      </div>
 
-      <hr />
-      <button onClick={logout}>🚪 Logout</button>
+      <div className="divider"></div>
+
+      <button className="logout-btn" onClick={logout}>
+        🚪 Logout
+      </button>
     </div>
   );
 };

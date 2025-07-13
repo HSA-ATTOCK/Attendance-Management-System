@@ -1,48 +1,126 @@
 .login-container {
   max-width: 400px;
-  margin: 80px auto;
-  padding: 30px 40px;
+  margin: 5vh auto;
+  padding: 2.5rem;
   background-color: #ffffff;
-  border-radius: 12px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-  font-family: "Segoe UI", sans-serif;
+  border-radius: 16px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   text-align: center;
+  animation: fadeIn 0.4s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .login-container h2 {
-  margin-bottom: 25px;
-  color: #333;
+  margin-bottom: 1.75rem;
+  color: #2d3748;
+  font-size: 1.75rem;
+  font-weight: 700;
+  letter-spacing: -0.5px;
 }
 
 .login-container input {
   width: 100%;
-  padding: 12px 15px;
-  margin: 10px 0;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  font-size: 16px;
+  padding: 0.875rem 1rem;
+  margin: 0.5rem 0;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  font-size: 0.9375rem;
   box-sizing: border-box;
+  transition: all 0.2s ease;
+  background-color: #f8fafc;
+}
+
+.login-container input:focus {
+  outline: none;
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+  background-color: #ffffff;
+}
+
+.login-container input::placeholder {
+  color: #94a3b8;
 }
 
 .login-container button {
-  background-color: #007bff;
+  background-color: #6366f1;
   color: white;
-  font-size: 16px;
+  font-size: 0.9375rem;
+  font-weight: 600;
   border: none;
-  padding: 12px;
-  border-radius: 8px;
+  padding: 0.875rem;
+  border-radius: 10px;
   width: 100%;
-  margin-top: 15px;
+  margin-top: 1.25rem;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: all 0.2s ease;
 }
 
 .login-container button:hover {
-  background-color: #0056b3;
+  background-color: #4f46e5;
+  transform: translateY(-1px);
+}
+
+.login-container button:active {
+  transform: translateY(0);
 }
 
 .login-container p {
-  color: #dc3545;
-  margin-top: 12px;
+  color: #ef4444;
+  margin-top: 1rem;
+  font-size: 0.875rem;
   font-weight: 500;
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+  .login-container {
+    margin: 2vh auto;
+    padding: 1.75rem;
+    width: 90%;
+    border-radius: 12px;
+  }
+  
+  .login-container h2 {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .login-container input {
+    padding: 0.75rem;
+  }
+  
+  .login-container button {
+    padding: 0.75rem;
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .login-container {
+    background-color: #1e293b;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+  }
+  
+  .login-container h2 {
+    color: #f8fafc;
+  }
+  
+  .login-container input {
+    background-color: #334155;
+    border-color: #475569;
+    color: #f8fafc;
+  }
+  
+  .login-container input:focus {
+    background-color: #1e293b;
+  }
+  
+  .login-container input::placeholder {
+    color: #94a3b8;
+  }
 }

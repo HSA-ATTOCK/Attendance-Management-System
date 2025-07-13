@@ -1,84 +1,274 @@
 /* AdminDashboard.css */
-
 .dashboard-container {
-  max-width: 400px;
-  margin: 50px auto;
-  padding: 30px 25px;
-  background-color: #f9f9f9;
-  border-radius: 12px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  max-width: 900px;
+  margin: 2rem auto;
+  padding: 2.5rem;
+  background-color: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+  animation: fadeIn 0.4s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .dashboard-container h2 {
   text-align: center;
-  margin-bottom: 25px;
-  color: #333;
+  margin-bottom: 1.5rem;
+  color: #2d3748;
+  font-size: 1.75rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+/* Form Section */
+.create-teacher-form {
+  background-color: #f8fafc;
+  padding: 1.5rem;
+  border-radius: 12px;
+  margin-bottom: 2rem;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1rem;
 }
 
 .dashboard-container input {
   width: 100%;
-  padding: 12px 10px;
-  margin-bottom: 15px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  font-size: 15px;
-  transition: border 0.2s;
+  padding: 0.75rem 1rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 0.9375rem;
+  transition: all 0.2s ease;
+  background-color: #ffffff;
 }
 
 .dashboard-container input:focus {
   outline: none;
-  border-color: #007bff;
-  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.15);
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
 }
 
 .dashboard-container button {
-  width: 100%;
-  padding: 12px;
-  background-color: #007bff;
+  padding: 0.75rem 1.5rem;
+  background-color: #6366f1;
   color: #fff;
   border: none;
-  font-size: 16px;
-  border-radius: 6px;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  border-radius: 8px;
   cursor: pointer;
-  transition: background-color 0.3s;
-  margin-bottom: 10px;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .dashboard-container button:hover {
-  background-color: #0056b3;
+  background-color: #4f46e5;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px -1px rgba(99, 102, 241, 0.2);
 }
 
-.dashboard-container p {
-  margin-top: 10px;
-  color: #d9534f;
+.message {
+  margin: 1rem 0;
+  font-size: 0.9375rem;
   font-weight: 500;
   text-align: center;
+  min-height: 1.5rem;
 }
 
-table {
+.message.success {
+  color: #10b981;
+}
+
+.message.error {
+  color: #ef4444;
+}
+
+/* Records Section */
+.records-section {
+  margin-top: 2rem;
+}
+
+.records-header {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.records-header h3 {
+  margin: 0;
+  color: #2d3748;
+  font-size: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.filter-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-left: auto;
+}
+
+/* Table Styles */
+.attendance-table {
   width: 100%;
-  border-collapse: collapse;
-  margin-top: 20px;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin-top: 1.5rem;
+  background-color: #ffffff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
-th,
-td {
-  border: 1px solid #ccc;
-  padding: 8px 12px;
+.attendance-table th {
+  background-color: #f1f5f9;
+  color: #334155;
+  font-weight: 600;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 0.75rem 1rem;
   text-align: left;
 }
 
-th {
-  background-color: #f0f0f0;
+.attendance-table td {
+  padding: 0.875rem 1rem;
+  border-bottom: 1px solid #e2e8f0;
+  font-size: 0.9375rem;
+  color: #475569;
 }
 
-tr:nth-child(even) {
-  background-color: #fafafa;
+.attendance-table tr:last-child td {
+  border-bottom: none;
 }
 
-hr {
-  margin: 20px 0;
+.attendance-table tr:hover td {
+  background-color: #f8fafc;
+}
+
+/* Divider */
+.divider {
   border: none;
-  border-top: 1px solid #ddd;
+  height: 1px;
+  background-color: #e2e8f0;
+  margin: 2rem 0;
+}
+
+/* Logout Button */
+.logout-btn {
+  background-color: #ef4444 !important;
+  margin-top: 2rem;
+}
+
+.logout-btn:hover {
+  background-color: #dc2626 !important;
+  box-shadow: 0 4px 6px -1px rgba(239, 68, 68, 0.2) !important;
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  .dashboard-container {
+    background-color: #1e293b;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+  }
+
+  .dashboard-container h2,
+  .records-header h3 {
+    color: #f8fafc;
+  }
+
+  .create-teacher-form {
+    background-color: #334155;
+  }
+
+  .dashboard-container input {
+    background-color: #334155;
+    border-color: #475569;
+    color: #f8fafc;
+  }
+
+  .dashboard-container input:focus {
+    background-color: #1e293b;
+  }
+
+  .attendance-table {
+    background-color: #1e293b;
+  }
+
+  .attendance-table th {
+    background-color: #334155;
+    color: #e2e8f0;
+  }
+
+  .attendance-table td {
+    color: #94a3b8;
+    border-bottom-color: #334155;
+  }
+
+  .attendance-table tr:hover td {
+    background-color: #334155;
+  }
+
+  .divider {
+    background-color: #334155;
+  }
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .dashboard-container {
+    padding: 1.5rem;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .filter-controls {
+    margin-left: 0;
+    width: 100%;
+  }
+
+  .filter-controls input {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .dashboard-container {
+    padding: 1.25rem;
+    margin: 1rem;
+  }
+
+  .attendance-table {
+    display: block;
+    overflow-x: auto;
+  }
+
+  .dashboard-container button {
+    width: 100%;
+    justify-content: center;
+  }
 }

@@ -5,12 +5,15 @@ import AdminDashboard from "./AdminDashboard";
 import TeacherDashboard from "./TeacherDashboard";
 
 const App = () => (
-  <BrowserRouter>
-    <Routes>
-      <Route path="/" element={<Login />} />
-      <Route path="/admin" element={<AdminDashboard />} />
-      <Route path="/teacher" element={<TeacherDashboard />} />
-    </Routes>
-  </BrowserRouter>
+  <div className="App">
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Login />} />
+        <Route path="/admin" element={<AdminDashboard />} />
+        <Route path="/teacher" element={<TeacherDashboard />} />
+      </Routes>
+    </BrowserRouter>
+  </div>
 );
+
 export default App;

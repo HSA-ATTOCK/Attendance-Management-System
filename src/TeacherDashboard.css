@@ -1,126 +1,248 @@
 /* TeacherDashboard.css */
-
 .teacher-container {
-  max-width: 480px;
-  margin: 40px auto;
-  padding: 30px 25px;
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 2.5rem;
   background-color: #ffffff;
-  border-radius: 12px;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
-  font-family: "Segoe UI", sans-serif;
+  border-radius: 16px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
   text-align: center;
+  animation: fadeIn 0.4s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .teacher-container h2 {
-  margin-bottom: 20px;
-  color: #2c3e50;
+  margin-bottom: 1.5rem;
+  color: #2d3748;
+  font-size: 1.75rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
 }
 
 .ip {
-  font-size: 14px;
-  color: #666;
-  margin-bottom: 15px;
+  font-size: 0.875rem;
+  color: #64748b;
+  margin-bottom: 1.5rem;
+  padding: 0.5rem 1rem;
+  background-color: #f8fafc;
+  border-radius: 8px;
+  display: inline-block;
+}
+
+.ip b {
+  color: #334155;
+  font-weight: 600;
 }
 
 .mark-btn {
-  background-color: #28a745;
+  background-color: #10b981;
   color: white;
-  font-size: 16px;
+  font-size: 1rem;
+  font-weight: 600;
   border: none;
-  padding: 10px 24px;
-  border-radius: 6px;
+  padding: 0.75rem 2rem;
+  border-radius: 10px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
-  margin-bottom: 20px;
+  transition: all 0.2s ease;
+  margin-bottom: 1.5rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .mark-btn:hover {
-  background-color: #218838;
+  background-color: #059669;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px -1px rgba(16, 185, 129, 0.2);
 }
 
 .mark-btn:disabled {
-  background-color: #6c757d;
+  background-color: #94a3b8;
   cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
 }
 
 .message {
-  margin-top: 12px;
-  font-size: 14px;
-  color: #28a745;
+  margin: 1rem 0;
+  font-size: 0.9375rem;
   font-weight: 500;
+  min-height: 1.5rem;
 }
 
 .error-msg {
-  color: #dc3545;
+  color: #ef4444;
+  background-color: #fef2f2;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
   font-weight: 500;
-  font-size: 14px;
-  margin-top: 10px;
+  font-size: 0.9375rem;
+  margin: 1rem 0;
+  display: inline-block;
 }
 
 button.logout-btn {
-  background-color: #dc3545;
+  background-color: #ef4444;
   color: white;
   border: none;
-  padding: 10px 24px;
-  font-size: 15px;
-  border-radius: 6px;
+  padding: 0.75rem 1.5rem;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  border-radius: 10px;
   cursor: pointer;
-  margin-top: 20px;
+  margin-top: 2rem;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 button.logout-btn:hover {
-  background-color: #bb2d3b;
+  background-color: #dc2626;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px -1px rgba(239, 68, 68, 0.2);
 }
 
-/* Attendance History Table */
-.attendance-list {
-  margin-top: 20px;
-  text-align: left;
+/* Attendance History */
+.teacher-container h3 {
+  margin: 2rem 0 1rem;
+  color: #2d3748;
+  font-size: 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
 }
 
-.attendance-list div {
-  background-color: #f8f9fa;
-  border-radius: 6px;
-  padding: 10px 12px;
-  margin-bottom: 8px;
-  border-left: 4px solid #28a745;
-  font-size: 14px;
-  color: #333;
-}
-
-/* Table-based structure for larger history (optional) */
 table.attendance-table {
   width: 100%;
-  border-collapse: collapse;
-  margin-top: 15px;
-}
-
-.attendance-table th,
-.attendance-table td {
-  padding: 8px 12px;
-  border: 1px solid #ccc;
-  text-align: left;
-  font-size: 14px;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin-top: 1.5rem;
+  background-color: #ffffff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
 .attendance-table th {
-  background-color: #f0f0f0;
+  background-color: #f1f5f9;
+  color: #334155;
+  font-weight: 600;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 0.75rem 1rem;
+  text-align: left;
 }
 
-.attendance-table tr:nth-child(even) {
-  background-color: #fafafa;
+.attendance-table td {
+  padding: 0.875rem 1rem;
+  border-bottom: 1px solid #e2e8f0;
+  font-size: 0.9375rem;
+  color: #475569;
+}
+
+.attendance-table tr:last-child td {
+  border-bottom: none;
+}
+
+.attendance-table tr:hover td {
+  background-color: #f8fafc;
+}
+
+hr {
+  border: none;
+  height: 1px;
+  background-color: #e2e8f0;
+  margin: 2rem 0;
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  .teacher-container {
+    background-color: #1e293b;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+  }
+
+  .teacher-container h2,
+  .teacher-container h3 {
+    color: #f8fafc;
+  }
+
+  .ip {
+    background-color: #334155;
+    color: #94a3b8;
+  }
+
+  .ip b {
+    color: #e2e8f0;
+  }
+
+  .attendance-table {
+    background-color: #1e293b;
+  }
+
+  .attendance-table th {
+    background-color: #334155;
+    color: #e2e8f0;
+  }
+
+  .attendance-table td {
+    color: #94a3b8;
+    border-bottom-color: #334155;
+  }
+
+  .attendance-table tr:hover td {
+    background-color: #334155;
+  }
+
+  hr {
+    background-color: #334155;
+  }
 }
 
 /* Responsive */
-@media (max-width: 500px) {
+@media (max-width: 640px) {
   .teacher-container {
-    padding: 20px;
+    padding: 1.5rem;
+    margin: 1rem;
+  }
+
+  .attendance-table {
+    display: block;
+    overflow-x: auto;
+  }
+}
+
+@media (max-width: 480px) {
+  .teacher-container {
+    padding: 1.25rem;
   }
 
   .mark-btn,
   .logout-btn {
     width: 100%;
-    font-size: 15px;
-    padding: 10px;
+    justify-content: center;
+  }
+
+  .attendance-table th,
+  .attendance-table td {
+    padding: 0.5rem;
+    font-size: 0.875rem;
   }
 }
