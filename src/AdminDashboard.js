@@ -14,6 +14,7 @@ const AdminDashboard = () => {
   const [search, setSearch] = useState("");
   const [dateFilter, setDateFilter] = useState("");
   const [viewAll, setViewAll] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
 
   // ✅ ADDED: Same timestamp formatting function from TeacherDashboard
@@ -131,7 +132,7 @@ const AdminDashboard = () => {
 
   const filtered = records.filter(
     (rec) =>
-      rec.name.toLowerCase().includes(search.toLowerCase()) &&
+      rec.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
       (dateFilter ? rec.date === dateFilter : true)
   );
 
@@ -190,11 +191,17 @@ const AdminDashboard = () => {
         <div className="records-header">
           <h3>📋 All Attendance Records</h3>
           <div className="filter-controls">
-            <input
-              placeholder="Search teacher..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
+            <div className="search-group">
+              <input
+                placeholder="Search teacher..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                onKeyPress={(e) => e.key === "Enter" && handleSearch()}
+              />
+              <button className="search-btn" onClick={handleSearch}>
+                🔍 Search
+              </button>
+            </div>
             <input
               type="date"
               value={dateFilter}
