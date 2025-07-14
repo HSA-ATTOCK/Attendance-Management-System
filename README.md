@@ -16,6 +16,10 @@ A full-stack **Attendance Management System** built using **React.js**, **Fireba
 
 ---
 
+## 📸 Preview
+
+![Attendance Management System's Admin Dashboard Screenshot](preview.png)
+
 ## 🚀 Features
 
 ### 🔐 Authentication
